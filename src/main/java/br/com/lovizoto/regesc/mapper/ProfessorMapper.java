@@ -7,6 +7,8 @@ import org.mapstruct.DecoratedWith;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
+import java.util.List;
+
 @Mapper(componentModel = "spring")
 @DecoratedWith(ProfessorMapperDecorator.class)
 public interface ProfessorMapper {
@@ -19,5 +21,7 @@ public interface ProfessorMapper {
     @Mapping(target = "disciplinas",  ignore = true)
     Professor toEntity(ProfessorDTO dto);
 
+    List<ProfessorDTO> toDTOList(List<Professor> entityList);
+    List<Professor> toEntityList(List<ProfessorDTO> dtoList);
 
 }

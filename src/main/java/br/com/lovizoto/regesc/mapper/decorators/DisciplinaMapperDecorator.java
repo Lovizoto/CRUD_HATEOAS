@@ -8,6 +8,9 @@ import br.com.lovizoto.regesc.mapper.DisciplinaMapper;
 import br.com.lovizoto.regesc.repository.ProfessorRepository;
 import org.springframework.beans.factory.annotation.Qualifier;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 
 public abstract class DisciplinaMapperDecorator implements DisciplinaMapper {
 
@@ -37,6 +40,15 @@ public abstract class DisciplinaMapperDecorator implements DisciplinaMapper {
             entity.setProfessor(professor);
         }
         return entity;
+    }
+
+    @Override
+    public List<DisciplinaDTO> toDTOList(List<Disciplina> entityList) {
+        return entityList.stream().map(this::toDTO).collect(Collectors.toList());
+    }
+
+    public List<Disciplina> toEntityList(List<DisciplinaDTO> dtoList) {
+        return dtoList.stream().map(this::toEntity).collect(Collectors.toList());
     }
 
 }

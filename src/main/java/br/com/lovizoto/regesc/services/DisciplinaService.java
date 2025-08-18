@@ -4,12 +4,14 @@ package br.com.lovizoto.regesc.services;
 import br.com.lovizoto.regesc.exception.handler.ResourceNotFoundException;
 import br.com.lovizoto.regesc.data.model.Aluno;
 import br.com.lovizoto.regesc.data.model.Disciplina;
+import br.com.lovizoto.regesc.mapper.DisciplinaMapper;
 import br.com.lovizoto.regesc.repository.AlunoRepository;
 import br.com.lovizoto.regesc.repository.DisciplinaRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -20,14 +22,22 @@ public class DisciplinaService {
 
     private Logger logger = LoggerFactory.getLogger(DisciplinaService.class.getName());
 
-    @Autowired
-    private DisciplinaRepository disciplinaRepository;
+    private final DisciplinaRepository disciplinaRepository;
+    private final AlunoRepository alunoaRepository;
+    private final DisciplinaMapper disciplinaMapper;
 
-    @Autowired
-    private AlunoRepository alunoRepository;
+    public DisciplinaService(DisciplinaRepository disciplinaRepository, AlunoRepository alunoaRepository, DisciplinaMapper disciplinaMapper) {
+        this.disciplinaRepository = disciplinaRepository;
+        this.alunoaRepository = alunoaRepository;
+        this.disciplinaMapper = disciplinaMapper;
+    }
 
+    @Transactional(readOnly = true)
     public List<Disciplina> findAll() {
         logger.info("Buscando todas as disciplinas");
+        return disciplinaMapper.toDTOList
+
+
         return disciplinaRepository.findAll();
     }
 

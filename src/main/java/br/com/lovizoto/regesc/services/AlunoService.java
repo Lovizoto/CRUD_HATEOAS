@@ -3,19 +3,15 @@ package br.com.lovizoto.regesc.services;
 import br.com.lovizoto.regesc.data.dto.AlunoDTO;
 import br.com.lovizoto.regesc.exception.handler.ResourceNotFoundException;
 import br.com.lovizoto.regesc.mapper.AlunoMapper;
-import br.com.lovizoto.regesc.mapper.config.StringToDisciplinaConverter;
 import br.com.lovizoto.regesc.data.model.Aluno;
-import br.com.lovizoto.regesc.data.model.Disciplina;
 import br.com.lovizoto.regesc.repository.AlunoRepository;
-import br.com.lovizoto.regesc.repository.DisciplinaRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
+
 
 
 @Service
@@ -68,9 +64,12 @@ public class AlunoService {
         return alunoMapper.toDTO(alunoSalvo);
     }
 
+    @Transactional
     public void delete(Long id) {
         logger.info("Deletando aluno com id: {}", id);
-
+        Aluno aluno = alunoRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Aluno não encontrado com o id: " + id));
+        alunoRepository.delete(aluno);
     }
 
 

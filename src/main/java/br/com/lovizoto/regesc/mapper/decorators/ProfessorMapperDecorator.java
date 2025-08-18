@@ -8,6 +8,7 @@ import br.com.lovizoto.regesc.mapper.ProfessorMapper;
 import br.com.lovizoto.regesc.repository.DisciplinaRepository;
 import org.springframework.beans.factory.annotation.Qualifier;
 
+import java.util.List;
 import java.util.stream.Collectors;
 
 public class ProfessorMapperDecorator implements ProfessorMapper {
@@ -41,5 +42,14 @@ public class ProfessorMapperDecorator implements ProfessorMapper {
                             .collect(Collectors.toSet()));
         }
         return entity;
+    }
+
+    @Override
+    public List<ProfessorDTO> toDTOList(List<Professor> entityList) {
+        return entityList.stream().map(this::toDto).collect(Collectors.toList());
+    }
+
+    public List<Professor> toEntityList(List<ProfessorDTO> dtoList) {
+        return dtoList.stream().map(this::toEntity).collect(Collectors.toList());
     }
 }

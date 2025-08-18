@@ -28,7 +28,7 @@ public interface AlunoMapper {
     AlunoDTO toDTO(Aluno entity);
 
     List<AlunoDTO> toDTOList(List<Aluno> entityList);
-//    List<Aluno> toEntityList(List<AlunoDTO> dtoList);
+    List<Aluno> toEntityList(List<AlunoDTO> dtoList);
 }
 
 
