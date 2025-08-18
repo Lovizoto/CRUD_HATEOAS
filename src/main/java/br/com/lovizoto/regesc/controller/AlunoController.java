@@ -1,9 +1,9 @@
 package br.com.lovizoto.regesc.controller;
 
 import br.com.lovizoto.regesc.data.dto.AlunoDTO;
-import br.com.lovizoto.regesc.model.Aluno;
 import br.com.lovizoto.regesc.services.AlunoService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -44,7 +44,7 @@ public class AlunoController {
      */
 
 
-    @GetMapping("/aluno")
+    @GetMapping(value = "/aluno", produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
     public List<AlunoDTO> listarAlunos() {
         return alunoService.findAll();
     }

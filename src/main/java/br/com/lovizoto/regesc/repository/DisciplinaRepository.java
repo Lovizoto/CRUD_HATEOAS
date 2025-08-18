@@ -1,6 +1,6 @@
 package br.com.lovizoto.regesc.repository;
 
-import br.com.lovizoto.regesc.model.Disciplina;
+import br.com.lovizoto.regesc.data.model.Disciplina;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

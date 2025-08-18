@@ -1,11 +1,10 @@
-package br.com.lovizoto.regesc.model;
+package br.com.lovizoto.regesc.data.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Set;
 
 
 @Entity
@@ -25,7 +24,7 @@ public class Professor {
 
     @OneToMany(mappedBy = "professor", fetch = FetchType.EAGER)
     @JsonManagedReference //gera um loop infinito no json por isso a anotação
-    private List<Disciplina> disciplinas;
+    private Set<Disciplina> disciplinas;
 
 
     @PreRemove
@@ -72,11 +71,15 @@ public class Professor {
         this.prontuario = prontuario;
     }
 
-    public List<Disciplina> getDisciplinas() {
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public Set<Disciplina> getDisciplinas() {
         return disciplinas;
     }
 
-    public void setDisciplinas(List<Disciplina> disciplinas) {
+    public void setDisciplinas(Set<Disciplina> disciplinas) {
         this.disciplinas = disciplinas;
     }
 }

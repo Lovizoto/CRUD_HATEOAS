@@ -1,12 +1,12 @@
 package br.com.lovizoto.regesc.data.dto;
 
 
-
+import org.springframework.hateoas.RepresentationModel;
 import java.io.Serializable;
 import java.util.Set;
 
 
-public class AlunoDTO implements Serializable {
+public class AlunoDTO extends RepresentationModel<AlunoDTO> implements Serializable {
 
     private Long id;
     private String nomecompleto;

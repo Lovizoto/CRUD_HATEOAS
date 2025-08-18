@@ -3,7 +3,7 @@ package br.com.lovizoto.regesc.mapper;
 
 import br.com.lovizoto.regesc.data.dto.AlunoDTO;
 import br.com.lovizoto.regesc.mapper.decorators.AlunoMapperDecorator;
-import br.com.lovizoto.regesc.model.Aluno;
+import br.com.lovizoto.regesc.data.model.Aluno;
 import org.mapstruct.DecoratedWith;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -28,7 +28,7 @@ public interface AlunoMapper {
     AlunoDTO toDTO(Aluno entity);
 
     List<AlunoDTO> toDTOList(List<Aluno> entityList);
-    List<Aluno> toEntityList(List<AlunoDTO> dtoList);
+//    List<Aluno> toEntityList(List<AlunoDTO> dtoList);
 }
 
 

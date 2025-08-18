@@ -1,8 +1,8 @@
 package br.com.lovizoto.regesc.services;
 
 import br.com.lovizoto.regesc.exception.handler.ResourceNotFoundException;
-import br.com.lovizoto.regesc.model.Disciplina;
-import br.com.lovizoto.regesc.model.Professor;
+import br.com.lovizoto.regesc.data.model.Disciplina;
+import br.com.lovizoto.regesc.data.model.Professor;
 import br.com.lovizoto.regesc.repository.DisciplinaRepository;
 import br.com.lovizoto.regesc.repository.ProfessorRepository;
 
