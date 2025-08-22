@@ -10,6 +10,7 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 import br.com.lovizoto.regesc.data.dto.CollectionResponse;
 import br.com.lovizoto.regesc.services.AlunoService;
 import org.springframework.hateoas.CollectionModel;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -47,10 +48,28 @@ public class AlunoController {
         response.add(linkTo(methodOn(AlunoController.class).findAll()).withSelfRel());
 
         return response;
-
     }
 
+    @PostMapping
+    public AlunoDTO create(@RequestBody AlunoDTO alunoDTO) {
+        AlunoDTO createdAluno = alunoService.create(alunoDTO);
 
+        createdAluno.add(linkTo(methodOn(AlunoController.class).findById(createdAluno.getId())).withSelfRel());
+        return createdAluno;
+    }
+
+    @PutMapping("/{id}")
+    public AlunoDTO update(@PathVariable Long id, @RequestBody AlunoDTO alunoDTO) {
+        AlunoDTO updatedAluno = alunoService.update(id, alunoDTO);
+        updatedAluno.add(linkTo(methodOn(AlunoController.class).findById(alunoDTO.getId())).withSelfRel());
+        return updatedAluno;
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> delete(@PathVariable Long id) {
+        alunoService.delete(id);
+        return ResponseEntity.noContent().build();
+    }
 
 
 }
