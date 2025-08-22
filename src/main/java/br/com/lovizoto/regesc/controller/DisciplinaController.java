@@ -12,30 +12,30 @@ import java.util.List;
 @RequestMapping("/regesc")
 public class DisciplinaController {
 
-    @Autowired
-    private DisciplinaService disciplinaService;
-
-
-    @GetMapping("/disciplina")
-    public List<Disciplina> listarDisciplinas() {
-        return disciplinaService.findAll();
-    }
-
-    @GetMapping("/disciplina/{idDisciplina}")
-    public Disciplina getDisciplina(@PathVariable Long idDisciplina) {
-        return disciplinaService.findById(idDisciplina);
-    }
-
-
-    @PostMapping("/disciplina")
-    public Disciplina criarDisciplina(@RequestBody Disciplina disciplina) {
-        return disciplinaService.create(disciplina);
-    }
-
-    @PutMapping("/disciplina/aluno/{idAluno}/{idDisciplina}")
-    public Disciplina vincularDisciplinaAluno(@PathVariable Long idAluno, @PathVariable Long idDisciplina){
-        return disciplinaService.vincularDisciplinaAluno(idAluno, idDisciplina);
-    }
+//    @Autowired
+//    private DisciplinaService disciplinaService;
+//
+//
+//    @GetMapping("/disciplina")
+//    public List<Disciplina> listarDisciplinas() {
+//        return disciplinaService.findAll();
+//    }
+//
+//    @GetMapping("/disciplina/{idDisciplina}")
+//    public Disciplina getDisciplina(@PathVariable Long idDisciplina) {
+//        return disciplinaService.findById(idDisciplina);
+//    }
+//
+//
+//    @PostMapping("/disciplina")
+//    public Disciplina criarDisciplina(@RequestBody Disciplina disciplina) {
+//        return disciplinaService.create(disciplina);
+//    }
+//
+//    @PutMapping("/disciplina/aluno/{idAluno}/{idDisciplina}")
+//    public Disciplina vincularDisciplinaAluno(@PathVariable Long idAluno, @PathVariable Long idDisciplina){
+//        return disciplinaService.vincularDisciplinaAluno(idAluno, idDisciplina);
+//    }
 
 
 }

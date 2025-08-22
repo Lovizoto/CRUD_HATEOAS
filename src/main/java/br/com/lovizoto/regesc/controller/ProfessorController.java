@@ -14,32 +14,32 @@ import java.util.List;
 @RequestMapping("/regesc")
 public class ProfessorController {
 
-    @Autowired
-    private ProfessorService professorService;
-
-    @PostMapping("/professor")
-    public Professor criarProfessor(@RequestBody Professor professor) {
-        return professorService.create(professor);
-    }
-
-    @GetMapping("/professor/{id}")
-    public Professor getProfessor(@PathVariable Long id) {
-        return professorService.findById(id);
-    }
-
-    @GetMapping("/professor")
-    public List<Professor> listarProfessor() {
-        return professorService.findAll();
-    }
-
-    @DeleteMapping("/professor/{id}")
-    public ResponseEntity<?> deleteProfessor(@PathVariable Long id) {
-        professorService.delete(id);
-        return ResponseEntity.noContent().build(); //a ideia desta linha é que ao deletar resulte no código 204 - código correto para delete
-    }
-
-    @GetMapping("/professor/disciplina/{idProfessor}")
-    public List<Disciplina> listarDisciplinasPorProfessor(@PathVariable Long idProfessor) {
-        return professorService.findAllDisciplinasByProfessorId(idProfessor);
-    }
+//    @Autowired
+//    private ProfessorService professorService;
+//
+//    @PostMapping("/professor")
+//    public Professor criarProfessor(@RequestBody Professor professor) {
+//        return professorService.create(professor);
+//    }
+//
+//    @GetMapping("/professor/{id}")
+//    public Professor getProfessor(@PathVariable Long id) {
+//        return professorService.findById(id);
+//    }
+//
+//    @GetMapping("/professor")
+//    public List<Professor> listarProfessor() {
+//        return professorService.findAll();
+//    }
+//
+//    @DeleteMapping("/professor/{id}")
+//    public ResponseEntity<?> deleteProfessor(@PathVariable Long id) {
+//        professorService.delete(id);
+//        return ResponseEntity.noContent().build(); //a ideia desta linha é que ao deletar resulte no código 204 - código correto para delete
+//    }
+//
+//    @GetMapping("/professor/disciplina/{idProfessor}")
+//    public List<Disciplina> listarDisciplinasPorProfessor(@PathVariable Long idProfessor) {
+//        return professorService.findAllDisciplinasByProfessorId(idProfessor);
+//    }
 }

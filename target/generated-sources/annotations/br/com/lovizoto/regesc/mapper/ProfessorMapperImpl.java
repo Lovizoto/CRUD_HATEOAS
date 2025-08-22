@@ -1,6 +1,6 @@
 package br.com.lovizoto.regesc.mapper;
 
-import br.com.lovizoto.regesc.mapper.decorators.AlunoMapperDecorator;
+import br.com.lovizoto.regesc.mapper.decorators.ProfessorMapperDecorator;
 import javax.annotation.processing.Generated;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Component;
@@ -12,5 +12,5 @@ import org.springframework.stereotype.Component;
 )
 @Component
 @Primary
-public class AlunoMapperImpl extends AlunoMapperDecorator {
+public class ProfessorMapperImpl extends ProfessorMapperDecorator {
 }

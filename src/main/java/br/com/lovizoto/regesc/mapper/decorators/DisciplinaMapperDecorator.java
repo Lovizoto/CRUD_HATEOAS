@@ -6,7 +6,9 @@ import br.com.lovizoto.regesc.data.model.Professor;
 import br.com.lovizoto.regesc.exception.handler.ResourceNotFoundException;
 import br.com.lovizoto.regesc.mapper.DisciplinaMapper;
 import br.com.lovizoto.regesc.repository.ProfessorRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -14,17 +16,17 @@ import java.util.stream.Collectors;
 
 public abstract class DisciplinaMapperDecorator implements DisciplinaMapper {
 
-    private final DisciplinaMapper disciplinaMapper;
-    private final ProfessorRepository professorRepository;
+    @Autowired
+    @Qualifier("delegate")
+    private DisciplinaMapper delegate;
 
-    public DisciplinaMapperDecorator(@Qualifier("disciplinaMapper") DisciplinaMapper disciplinaMapper, ProfessorRepository professorRepository) {
-        this.disciplinaMapper = disciplinaMapper;
-        this.professorRepository = professorRepository;
-    }
+    @Autowired
+    private ProfessorRepository professorRepository;
+
 
     @Override
     public DisciplinaDTO toDTO(Disciplina entity) {
-        DisciplinaDTO dto = disciplinaMapper.toDTO(entity);
+        DisciplinaDTO dto = delegate.toDTO(entity);
         if (entity.getProfessor() != null) {
             dto.setProfessor(entity.getProfessor().getNome());
         }
@@ -33,7 +35,7 @@ public abstract class DisciplinaMapperDecorator implements DisciplinaMapper {
 
     @Override
     public Disciplina toEntity(DisciplinaDTO dto) {
-        Disciplina entity = disciplinaMapper.toEntity(dto);
+        Disciplina entity = delegate.toEntity(dto);
         if (dto.getProfessor() != null && !dto.getProfessor().isEmpty()) {
             Professor professor = professorRepository.findByNome(dto.getProfessor())
                     .orElseThrow(() -> new ResourceNotFoundException("Professor não encontrado " + dto.getProfessor()));

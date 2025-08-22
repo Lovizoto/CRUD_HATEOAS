@@ -6,24 +6,28 @@ import br.com.lovizoto.regesc.data.model.Professor;
 import br.com.lovizoto.regesc.exception.handler.ResourceNotFoundException;
 import br.com.lovizoto.regesc.mapper.ProfessorMapper;
 import br.com.lovizoto.regesc.repository.DisciplinaRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+
 
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class ProfessorMapperDecorator implements ProfessorMapper {
 
-    private final ProfessorMapper professorMapper;
-    private final DisciplinaRepository disciplinaRepository;
+public abstract class ProfessorMapperDecorator implements ProfessorMapper {
 
-    public ProfessorMapperDecorator(@Qualifier("professorMapper") ProfessorMapper professorMapper, DisciplinaRepository disciplinaRepository) {
-        this.professorMapper = professorMapper;
-        this.disciplinaRepository = disciplinaRepository;
-    }
+    @Autowired
+    @Qualifier("delegate")
+    private ProfessorMapper delegate;
+
+    @Autowired
+    private DisciplinaRepository disciplinaRepository;
+
+
 
     @Override
     public ProfessorDTO toDto(Professor entity) {
-        ProfessorDTO dto =  professorMapper.toDto(entity);
+        ProfessorDTO dto =  delegate.toDto(entity);
         if (entity.getDisciplinas() != null) {
             dto.setDisciplinas(entity.getDisciplinas().stream()
                     .map(Disciplina :: getNome)
@@ -34,7 +38,7 @@ public class ProfessorMapperDecorator implements ProfessorMapper {
 
     @Override
     public Professor toEntity(ProfessorDTO dto) {
-        Professor entity =  professorMapper.toEntity(dto);
+        Professor entity =  delegate.toEntity(dto);
         if (dto.getDisciplinas() != null) {
             entity.setDisciplinas(dto.getDisciplinas().stream()
                     .map(nome -> disciplinaRepository.findByNome(nome)

@@ -1,68 +1,54 @@
 package br.com.lovizoto.regesc.controller;
 
 import br.com.lovizoto.regesc.data.dto.AlunoDTO;
+
+
+
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
+
 import br.com.lovizoto.regesc.services.AlunoService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
+import org.springframework.hateoas.CollectionModel;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/regesc") //posso utilizar ("/regesc/aluno") e retirar todos os "/aluno" das anotações
+@RequestMapping("/api/v1/alunos") //posso utilizar ("/regesc/aluno") e retirar todos os "/aluno" das anotações
 public class AlunoController {
 
-    @Autowired
-    private AlunoService alunoService;
 
-    /*
-        VERSÃO SEM DTO
-     */
+    private final AlunoService alunoService;
 
-//    @GetMapping("/aluno")
-//    public List<Aluno> listarAlunos() {
-//        return alunoService.findAll();
-//    }
-//
-//    @PostMapping("/aluno")
-//    public Aluno criarAluno(@RequestBody Aluno aluno) {
-//        return alunoService.criarAluno(aluno);
-//    }
-//
-//    @PutMapping("/aluno")
-//    public Aluno atualizarAluno(@RequestBody Aluno aluno) {
-//        return alunoService.atualizarAluno(aluno);
-//    }
-//
-//    @PutMapping("/aluno/disciplina/{idAluno}/{idDisciplina}")
-//    public Aluno vincularAlunoDisciplina(@PathVariable Long idAluno, @PathVariable Long idDisciplina) {
-//        return alunoService.vincularDisciplina(idAluno, idDisciplina);
-//    }
-
-    /*
-        VERSÃO COM DTO
-     */
-
-
-    @GetMapping(value = "/aluno", produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
-    public List<AlunoDTO> listarAlunos() {
-        return alunoService.findAll();
+    public AlunoController(AlunoService alunoService) {
+        this.alunoService = alunoService;
     }
 
-    @PostMapping("/aluno")
-    public AlunoDTO criarAluno(@RequestBody AlunoDTO aluno) {
-        return alunoService.criarAluno(aluno);
+    @GetMapping("/{id}")
+    public AlunoDTO findById(@PathVariable Long id) {
+        AlunoDTO alunoDTO = alunoService.findById(id);
+
+        alunoDTO.add(linkTo(methodOn(AlunoController.class).findById(id)).withSelfRel());
+        alunoDTO.add(linkTo(methodOn(AlunoController.class).findAll()).withRel("todosAlunos"));
+
+        return alunoDTO;
+
     }
 
-//    @PutMapping("/aluno")
-//    public Aluno atualizarAluno(@RequestBody Aluno aluno) {
-//        return alunoService.atualizarAluno(aluno);
-//    }
-//
-//    @PutMapping("/aluno/disciplina/{idAluno}/{idDisciplina}")
-//    public Aluno vincularAlunoDisciplina(@PathVariable Long idAluno, @PathVariable Long idDisciplina) {
-//        return alunoService.vincularDisciplina(idAluno, idDisciplina);
-//    }
+    @GetMapping
+    public CollectionModel<AlunoDTO> findAll() {
+        List<AlunoDTO> alunos = alunoService.findAll();
+
+        alunos.forEach(alunoDTO ->
+                alunoDTO.add(linkTo(methodOn(AlunoController.class).findById(alunoDTO.getId())).withSelfRel()));
+
+        var link = linkTo(methodOn(AlunoController.class).findAll()).withSelfRel();
+
+        return CollectionModel.of(alunos, link);
+
+    }
+
+
 
 
 }

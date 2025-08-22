@@ -1,6 +1,7 @@
 package br.com.lovizoto.regesc.services;
 
 
+import br.com.lovizoto.regesc.data.dto.DisciplinaDTO;
 import br.com.lovizoto.regesc.exception.handler.ResourceNotFoundException;
 import br.com.lovizoto.regesc.data.model.Aluno;
 import br.com.lovizoto.regesc.data.model.Disciplina;
@@ -9,12 +10,10 @@ import br.com.lovizoto.regesc.repository.AlunoRepository;
 import br.com.lovizoto.regesc.repository.DisciplinaRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class DisciplinaService {
@@ -33,43 +32,67 @@ public class DisciplinaService {
     }
 
     @Transactional(readOnly = true)
-    public List<Disciplina> findAll() {
+    public List<DisciplinaDTO> findAll() {
         logger.info("Buscando todas as disciplinas");
-        return disciplinaMapper.toDTOList
-
-
-        return disciplinaRepository.findAll();
+        return disciplinaMapper.toDTOList(disciplinaRepository.findAll());
     }
 
-    public Disciplina findById(Long id) {
+    @Transactional(readOnly = true)
+    public DisciplinaDTO findById(Long id) {
         logger.info("Buscando disciplina por id: {}", id);
-        return disciplinaRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("No record found with id " + id));
+        Disciplina disciplina = disciplinaRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Disciplina não encontrada com o id: " + id));
+
+        return disciplinaMapper.toDTO(disciplina);
     }
 
-    public Disciplina create(Disciplina disciplina) {
+    @Transactional
+    public DisciplinaDTO create(DisciplinaDTO disciplinaDTO) {
         logger.info("Criando disciplina");
-        return disciplinaRepository.save(disciplina);
+        Disciplina disciplina = disciplinaMapper.toEntity(disciplinaDTO);
+        Disciplina disciplinaSalva = disciplinaRepository.save(disciplina);
+        return disciplinaMapper.toDTO(disciplinaSalva);
     }
 
-    public void deleteById(Long id) {
-        logger.info("Deletando disciplina");
-        disciplinaRepository.deleteById(id);
+    @Transactional
+    public DisciplinaDTO update(Long id, DisciplinaDTO disciplinaDTO) {
+        logger.info("Atualizando disciplina com id: {}", disciplinaDTO.getId());
+        Disciplina disciplinaExistente = disciplinaRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Disciplina não encontrada com o id: " + id));
+        Disciplina disciplinaAtualizada = disciplinaMapper.toEntity(disciplinaDTO);
+
+        disciplinaAtualizada.setId(disciplinaExistente.getId());
+
+        Disciplina disciplinaSalva = disciplinaRepository.save(disciplinaAtualizada);
+        return disciplinaMapper.toDTO(disciplinaSalva);
     }
 
+    @Transactional
+    public void delete(Long id) {
+        logger.info("Deletando disciplina com id: {}", id);
+        Disciplina disciplina = disciplinaRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Disciplina não encontrada com o id: " + id));
+        disciplinaRepository.delete(disciplina);
+    }
 
-    public Disciplina vincularDisciplinaAluno(Long idAluno, Long idDisciplina) {
+    @Transactional
+    public DisciplinaDTO vincularAluno(Long idDisciplina, Long idAluno) {
+        logger.info("Vinculando aluno {} à disciplina {}", idAluno, idDisciplina);
 
-        Aluno aluno = alunoRepository.findById(idAluno).orElseThrow(() -> new ResourceNotFoundException("No record found with id " + idAluno));
-        Disciplina disciplina = disciplinaRepository.findById(idDisciplina).orElseThrow(() -> new ResourceNotFoundException("No record found with id " + idAluno));
+        Disciplina disciplina = disciplinaRepository.findById(idDisciplina)
+                .orElseThrow(() -> new ResourceNotFoundException("Disciplina não encontrada com o id: " + idDisciplina));
+
+        Aluno aluno = alunoaRepository.findById(idAluno)
+                .orElseThrow(() -> new ResourceNotFoundException("Aluno não encontrado com o id: " + idAluno));
 
         disciplina.getAlunos().add(aluno);
-        return disciplinaRepository.save(disciplina);
 
+        Disciplina disciplinaSalva = disciplinaRepository.save(disciplina);
+        return disciplinaMapper.toDTO(disciplinaSalva);
     }
 
-    public Optional<Disciplina> findByNome(String nome) {
-        return disciplinaRepository.findByNome(nome);
-    }
+
+
 
 
 }

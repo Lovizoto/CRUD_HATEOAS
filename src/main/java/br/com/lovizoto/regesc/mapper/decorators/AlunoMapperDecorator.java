@@ -1,37 +1,51 @@
 package br.com.lovizoto.regesc.mapper.decorators;
 
 import br.com.lovizoto.regesc.data.dto.AlunoDTO;
+import br.com.lovizoto.regesc.data.model.Disciplina;
+import br.com.lovizoto.regesc.exception.handler.ResourceNotFoundException;
 import br.com.lovizoto.regesc.mapper.AlunoMapper;
 
 import br.com.lovizoto.regesc.data.model.Aluno;
 import br.com.lovizoto.regesc.repository.DisciplinaRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+
 
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 
-public class AlunoMapperDecorator implements AlunoMapper {
+public abstract class AlunoMapperDecorator implements AlunoMapper {
 
-    private final AlunoMapper alunoMapper;
-    private final DisciplinaRepository disciplinaRepository;
+    @Autowired
+    @Qualifier("delegate")
+    private AlunoMapper delegate;
 
-    public AlunoMapperDecorator(@Qualifier("alunoMapper") AlunoMapper alunoMapper, DisciplinaRepository disciplinaRepository) {
-        this.alunoMapper = alunoMapper;
-        this.disciplinaRepository = disciplinaRepository;
-    }
+    @Autowired
+    private DisciplinaRepository disciplinaRepository;
+
 
     @Override
     public Aluno toEntity(AlunoDTO dto) {
-        Aluno aluno = alunoMapper.toEntity(dto);
-        return aluno;
+        Aluno entity = delegate.toEntity(dto);
+        if (dto.getDisciplinas() != null) {
+            entity.setDisciplinas(dto.getDisciplinas().stream()
+                    .map(nome -> disciplinaRepository.findByNome(nome)
+                            .orElseThrow(() -> new ResourceNotFoundException("Disciplina não encontrada " + nome)))
+                    .collect(Collectors.toSet()));
+        }
+        return entity;
     }
 
     @Override
     public AlunoDTO toDTO(Aluno entity) {
-        AlunoDTO dto = alunoMapper.toDTO(entity);
-        dto.setDisciplinas(converter.mapDisciplinas(entity.getDisciplinas()));
+        AlunoDTO dto = delegate.toDTO(entity);
+        if (entity.getDisciplinas() != null) {
+            dto.setDisciplinas(entity.getDisciplinas().stream()
+                    .map(Disciplina :: getNome)
+                    .collect(Collectors.toSet()));
+        }
         return dto;
     }
 
