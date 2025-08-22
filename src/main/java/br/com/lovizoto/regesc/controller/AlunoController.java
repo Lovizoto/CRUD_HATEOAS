@@ -7,6 +7,7 @@ import br.com.lovizoto.regesc.data.dto.AlunoDTO;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
+import br.com.lovizoto.regesc.data.dto.CollectionResponse;
 import br.com.lovizoto.regesc.services.AlunoService;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.web.bind.annotation.*;
@@ -14,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1/alunos") //posso utilizar ("/regesc/aluno") e retirar todos os "/aluno" das anotações
+@RequestMapping("/api/v1/alunos")
 public class AlunoController {
 
 
@@ -36,15 +37,16 @@ public class AlunoController {
     }
 
     @GetMapping
-    public CollectionModel<AlunoDTO> findAll() {
+    public CollectionResponse<AlunoDTO> findAll() {
         List<AlunoDTO> alunos = alunoService.findAll();
 
         alunos.forEach(alunoDTO ->
                 alunoDTO.add(linkTo(methodOn(AlunoController.class).findById(alunoDTO.getId())).withSelfRel()));
 
-        var link = linkTo(methodOn(AlunoController.class).findAll()).withSelfRel();
+        CollectionResponse<AlunoDTO> response = new CollectionResponse<>(alunos);
+        response.add(linkTo(methodOn(AlunoController.class).findAll()).withSelfRel());
 
-        return CollectionModel.of(alunos, link);
+        return response;
 
     }
 
