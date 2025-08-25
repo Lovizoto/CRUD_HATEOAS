@@ -58,7 +58,7 @@ public class DisciplinaController {
     @PutMapping("/{id}")
     public DisciplinaDTO update(@PathVariable Long id, @RequestBody DisciplinaDTO disciplinaDTO){
         DisciplinaDTO disciplinaAtualizada = disciplinaService.update(id, disciplinaDTO);
-        disciplinaAtualizada.add(linkTo(methodOn(DisciplinaController.class).findById(id)).withSelfRel());
+        disciplinaAtualizada.add(linkTo(methodOn(DisciplinaController.class).findById(disciplinaAtualizada.getId())).withSelfRel());
         return disciplinaAtualizada;
     }
 

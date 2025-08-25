@@ -9,7 +9,6 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 import br.com.lovizoto.regesc.data.dto.CollectionResponse;
 import br.com.lovizoto.regesc.services.AlunoService;
-import org.springframework.hateoas.CollectionModel;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -31,7 +30,7 @@ public class AlunoController {
         AlunoDTO alunoDTO = alunoService.findById(id);
 
         alunoDTO.add(linkTo(methodOn(AlunoController.class).findById(id)).withSelfRel());
-        alunoDTO.add(linkTo(methodOn(AlunoController.class).findAll()).withRel("todosAlunos"));
+        alunoDTO.add(linkTo(methodOn(AlunoController.class).findAll()).withRel("alunos"));
 
         return alunoDTO;
 
@@ -60,9 +59,9 @@ public class AlunoController {
 
     @PutMapping("/{id}")
     public AlunoDTO update(@PathVariable Long id, @RequestBody AlunoDTO alunoDTO) {
-        AlunoDTO updatedAluno = alunoService.update(id, alunoDTO);
-        updatedAluno.add(linkTo(methodOn(AlunoController.class).findById(alunoDTO.getId())).withSelfRel());
-        return updatedAluno;
+        AlunoDTO alunoAtualizado = alunoService.update(id, alunoDTO);
+        alunoAtualizado.add(linkTo(methodOn(AlunoController.class).findById(alunoAtualizado.getId())).withSelfRel());
+        return alunoAtualizado;
     }
 
     @DeleteMapping("/{id}")
