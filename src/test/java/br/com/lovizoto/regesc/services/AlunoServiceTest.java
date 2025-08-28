@@ -15,6 +15,8 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -105,7 +107,24 @@ class AlunoServiceTest {
     }
 
     @Test
+    @DisplayName("Retorna lista com todos os alunos")
     void findAll() {
+
+        //Arrange
+        List<Aluno> alunos = MockAlunoFactory.mockAlunos();
+        List<AlunoDTO> alunosDTO = MockAlunoFactory.mockAlunosDTO();
+        when(alunoRepository.findAll()).thenReturn(alunos);
+        when(alunoMapper.toDTOList(alunos)).thenReturn(alunosDTO);
+
+        //Act
+        List<AlunoDTO> result = alunoService.findAll();
+
+        //Assert
+        assertNotNull(result);
+        assertEquals(alunosDTO.size(), result.size());
+        assertEquals(alunosDTO.get(0).getNomecompleto(), result.get(0).getNomecompleto());
+        verify(alunoRepository).findAll();
+
     }
 
 }
